@@ -23,21 +23,21 @@ with open('subscriptions.txt','w') as myfile:
     for subID, dates in subs.items():
         sub_type = ''
         duration = ''
-        # for n in range(min(size(dates)-1,10)):
+        
         if len(dates) == 1:
             sub_type = ' one-off'
             duration = '{0}/{1}/{2}'.format(dates[0].month,dates[0].day,dates[0].year)
         elif dates[0].month == dates[1].month and dates[0].day == dates[1].day:
             sub_type = '  yearly'
-            duration = str(dates[-1].year-dates[0].year+1) + ' years'
+            duration = str(len(dates)) + ' years'
         elif dates[0].day == dates[1].day:
             sub_type = ' monthly'
             months1 = dates[0].year*12+dates[0].month
             months2 = dates[-1].year*12+dates[-1].month
-            duration = str(months2-months1+1) + ' months'
+            duration = str(len(dates)) + ' months'
         else:
             sub_type = '   daily'
-            duration = str(dates[-1].toordinal()-dates[0].toordinal()+1) + ' days'
+            duration = str(len(dates)) + ' days'
         myfile.write(str(subID).rjust(5) + sub_type + duration.rjust(11)+'\n')
 
 yearly_rev[1965] = yearly_rev[1966] #this way, the first difference will end up being 0, because it's just the baseline
@@ -52,9 +52,6 @@ for year in range(1966,2015):
 sorteddifs = sorted(difs.items(), key=operator.itemgetter(1))
 sortedpctdifs = sorted(pctdifs.items(), key=operator.itemgetter(1))
 
-# locale.setlocale(locale.LC_ALL,'')
-# locale.localeconv()['frac_digits'] = 1
-# locale.localeconv()['mon_grouping'] = [3,0]
 with open('revenue.txt','w') as myfile:
     myfile.write('     Revenue  Year\n')
     for year in range(1966,2015):
@@ -63,6 +60,6 @@ with open('revenue.txt','w') as myfile:
 
     myfile.write('\n');
     myfile.write('The highest growth of revenue was ${0:,d} in {1}.\n'.format(sorteddifs[-1][1],sorteddifs[-1][0]))
-    myfile.write('The highest percent growth of revenue was ${0:.2f} in {1}.\n'.format(sortedpctdifs[-1][1],sortedpctdifs[-1][0]))
+    myfile.write('The highest percent growth of revenue was {0:.2f}% in {1}.\n'.format(sortedpctdifs[-1][1],sortedpctdifs[-1][0]))
     myfile.write('The highest loss of revenue was ${0:,d} in {1}.\n'.format(-sorteddifs[0][1],sorteddifs[0][0]))
     myfile.write('The highest percent loss of revenue was {0:.2f}% in {1}.\n'.format(-sortedpctdifs[0][1],sortedpctdifs[0][0]))
